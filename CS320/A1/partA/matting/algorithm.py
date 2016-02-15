@@ -208,12 +208,12 @@ success, errorMessage = triangulationMatting(self)
         matrix = np.tile(np.identity(3), (2, 1))     
         many_matrices = np.tile(matrix, (height, width, 1, 1)) 
         A = np.concatenate((many_matrices, background), axis = 3)   #right side of equation
-        Apinv = np.empty((height, width, 4, 6)) #empty matrix to store A after psuedo-inverse
+        #Apinv = np.empty((height, width, 4, 6)) #empty matrix to store A after psuedo-inverse
 
         for y, x in np.ndindex(backA.shape[0], backA.shape[1]):
-            Apinv[y, x] = np.linalg.pinv(A[y, x])   #psuedo-inverse
+            #Apinv[y, x] = np.linalg.pinv(A[y, x])   #psuedo-inverse
             result[y, x] = np.reshape(
-                        np.dot(Apinv[y, x], delta[y, x]), (4))  #dot product to get RGBa in vector form
+                        np.dot(np.linalg.pinv(A[y, x]), delta[y, x]), (4))  #dot product to get RGBa in vector form
 
         alphaOut = np.clip(result[:,:,3], 0.0, 1.0) * 255.0;    #alpha values in matrix
         colOut = np.clip(result[:,:,0:3], 0.0, 255.0)   #RGB values in matrix
